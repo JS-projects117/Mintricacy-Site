@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- Top-right text links -->
+<div class="top-right-links">
+
+</div>
+
+<!-- Loader Overlay -->
+<div id="loader">
+  <div class="console">
+    <pre id="console-text"></pre>
+  </div>
+</div>
+
+<body>
+
+  <!-- About Section -->
+  <div class="centered-box">
+    <h4>About</h4>
+    <p>
+      Mintricacy is a company dedicated to creating useful and effective software. We make games, software utilities, and open source projects <br>
+      Currently we have developed one game and are now working on a software utility for linux users.
+    </p>
+    <h6>- Open to new clients & partnerships -</h6>
+    <br>
+   
+  </div>
+
+   <h3>Notable Projects</h3>
+
+    <!-- Projects section -->
+  <div class="projects-grid">
+    <div class="project-box">
+        <h3>Mobile Game - Pixel Destructor</h3>
+        <a href="https://mint-projects.itch.io/pixinator" target="_blank" class="see-more-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 0 1 7-7l2 2a5 5 0 0 1-7 7l-2-2z"/>
+                <path d="M14 11a5 5 0 0 1-7 7l-2-2a5 5 0 0 1 7-7l2 2z"/>
+            </svg>
+            <span>See More</span>
+        </a>
+        <div class="project-desc">
+            <p>A 2d pixel destruction action game where the player fights evil robots and can collect coing and get new player skins.
+            </p>
+        </div>
+    </div>
+
+
+<script>
+const consoleText = document.getElementById("console-text");
+
+// Example "assembly-style" lines
+const messages = [
+    "MOV AX, 0x1F",
+    "ADD BX, AX",
+    "INT 0x80",
+    "JMP 0x00400000",
+    "PUSH CX",
+    "POP DX",
+    "NOP",
+    "CALL 0x00401000"
+];
+
+// Last two lines to appear after "loading"
+const finalMessages = [
+    "HLT",
+    "System initialized..."
+];
+
+let linesTyped = 0;
+const totalRandomLines = 15;
+
+// Type each line character by character
+function typeLine(line, charIndex = 0, callback = null) {
+  if (charIndex < line.length) {
+    consoleText.innerHTML += line.charAt(charIndex);
+    setTimeout(() => typeLine(line, charIndex + 1, callback), 5);
+  } else {
+    consoleText.innerHTML += "\n";
+    if (callback) callback();
+  }
+}
+
+function typeRandomLines() {
+  if (linesTyped < totalRandomLines) {
+    const randomIndex = Math.floor(Math.random() * messages.length);
+    typeLine(messages[randomIndex], 0, () => {
+      linesTyped++;
+      setTimeout(typeRandomLines, 10);
+    });
+  } else {
+    typeFinalMessages(0);
+  }
+}
+
+function typeFinalMessages(index) {
+  if (index < finalMessages.length) {
+    typeLine(finalMessages[index], 0, () => typeFinalMessages(index + 1));
+  } else {
+    const loader = document.getElementById("loader");
+    loader.style.transition = "opacity 0.7s ease, transform 0.7s ease";
+    loader.style.opacity = "0";
+    loader.style.transform = "scale(1.1)";
+    setTimeout(() => loader.style.display = "none", 700);
+  }
+}
+
+window.addEventListener("load", () => {
+  typeRandomLines();
+});
+</script>
+
+</html>
