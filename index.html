@@ -3,93 +3,609 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About Mintricacy LLC</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Mintricacy LLC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080c0e;
+      --surface: #0d1317;
+      --border: #1f2d33;
+      --accent: #00e5a0;
+      --accent2: #00aaff;
+      --warn: #ff6b35;
+      --text: #c8d8d0;
+      --muted: #4a6670;
+      --mono: 'Share Tech Mono', monospace;
+      --display: 'Bebas Neue', sans-serif;
+      --body: 'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── GRID BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── LOADER ── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #020405;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .console-wrap {
+      width: min(640px, 90vw);
+      border: 1px solid var(--accent);
+      background: #020405;
+      box-shadow: 0 0 60px rgba(0,229,160,0.15), inset 0 0 40px rgba(0,0,0,0.8);
+    }
+
+    .console-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--accent);
+      background: rgba(0,229,160,0.05);
+    }
+
+    .console-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .console-dot:nth-child(1) { background: #ff5f57; }
+    .console-dot:nth-child(2) { background: #febc2e; }
+    .console-dot:nth-child(3) { background: #28c840; }
+
+    .console-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: auto;
+      letter-spacing: 0.1em;
+    }
+
+    .console-body {
+      padding: 20px;
+      height: 220px;
+      overflow: hidden;
+    }
+
+    #console-text {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      line-height: 1.7;
+      white-space: pre-wrap;
+      text-shadow: 0 0 8px rgba(0,229,160,0.5);
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--accent);
+      animation: blink 0.7s step-end infinite;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      padding: 60px 0 40px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 80px;
+    }
+
+    .header-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(72px, 10vw, 140px);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      color: #fff;
+      text-shadow: 0 0 80px rgba(0,229,160,0.12);
+      position: relative;
+    }
+
+    h1 .accent { color: var(--accent); }
+
+    .header-sub {
+      margin-top: 24px;
+      font-size: 15px;
+      color: var(--muted);
+      font-family: var(--mono);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-sub::before {
+      content: '//';
+      color: var(--accent);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      margin-top: 28px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%,100%{ opacity:1; transform:scale(1); }
+      50%{ opacity:0.4; transform:scale(0.8); }
+    }
+
+    .header-decor {
+      position: absolute;
+      top: 40px;
+      right: 0;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--border);
+      text-align: right;
+      line-height: 1.8;
+      pointer-events: none;
+    }
+
+    /* ── ABOUT BLOCK ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-bottom: 80px;
+    }
+
+    .about-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 40px;
+      position: relative;
+    }
+
+    .about-panel:first-child {
+      border-right: none;
+    }
+
+    .panel-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .about-panel h2 {
+      font-family: var(--display);
+      font-size: 48px;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    .about-panel p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .stat-list {
+      list-style: none;
+      margin-top: 24px;
+    }
+
+    .stat-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+
+    .stat-list li:last-child { border-bottom: none; }
+
+    .stat-label { color: var(--muted); }
+    .stat-val { color: var(--accent); }
+
+    /* ── SECTION TITLE ── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .section-head h2 {
+      font-family: var(--display);
+      font-size: 52px;
+      color: #fff;
+      letter-spacing: 0.03em;
+      line-height: 1;
+    }
+
+    .section-head .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    .section-head .num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ── PROJECT CARDS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-bottom: 80px;
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .project-card:hover {
+      border-color: rgba(0,229,160,0.3);
+      background: #0f1a1f;
+    }
+
+    .project-card:hover::before { transform: scaleX(1); }
+
+    .project-type {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 16px;
+    }
+
+    .project-card h3 {
+      font-family: var(--display);
+      font-size: 40px;
+      color: #fff;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      margin-bottom: 20px;
+    }
+
+    .project-card p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .tech-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      background: rgba(0,229,160,0.07);
+      border: 1px solid rgba(0,229,160,0.2);
+      color: var(--accent);
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: #fff;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s, gap 0.2s;
+    }
+
+    .project-link:hover { color: var(--accent); gap: 12px; }
+
+    .project-link svg {
+      transition: transform 0.2s;
+    }
+
+    .project-link:hover svg { transform: translate(2px, -2px); }
+
+    .card-num {
+      position: absolute;
+      bottom: 20px;
+      right: 24px;
+      font-family: var(--mono);
+      font-size: 60px;
+      color: rgba(255,255,255,0.03);
+      line-height: 1;
+      pointer-events: none;
+      font-weight: 900;
+    }
+
+    /* ── BOTTOM CTA ── */
+    .cta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 40px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .cta-text h3 {
+      font-family: var(--display);
+      font-size: 36px;
+      color: #fff;
+      letter-spacing: 0.03em;
+    }
+
+    .cta-text p {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: #000;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 700;
+      transition: background 0.2s, box-shadow 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #00ffb3;
+      box-shadow: 0 0 24px rgba(0,229,160,0.4);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      main { padding: 0 20px 60px; }
+      .about-grid, .projects-grid { grid-template-columns: 1fr; }
+      .about-panel:first-child { border-right: 1px solid var(--border); border-bottom: none; }
+      .cta-bar { flex-direction: column; gap: 24px; text-align: center; }
+    }
+
+    /* ── PAGE REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
-
-<!-- Top-right text links -->
-<div class="top-right-links">
-
-</div>
-
-<!-- Loader Overlay -->
-<div id="loader">
-  <div class="console">
-    <pre id="console-text"></pre>
-  </div>
-</div>
-
 <body>
 
-  <!-- About Section -->
-  <div class="centered-box">
-    <h4>About</h4>
-    <p>
-      Mintricacy is a company dedicated to creating useful and effective software. We make games, software utilities, and open source projects <br>
-      Currently we have developed one game and are now working on a software utility for linux users.
-    </p>
-    <h6>- Open to new clients & partnerships -</h6>
-    <br>
-   
+<!-- LOADER -->
+<div id="loader">
+  <div class="console-wrap">
+    <div class="console-header">
+      <div class="console-dot"></div>
+      <div class="console-dot"></div>
+      <div class="console-dot"></div>
+      <span class="console-title">MINTRICACY_BOOT.exe</span>
+    </div>
+    <div class="console-body">
+      <pre id="console-text"></pre><span class="cursor"></span>
+    </div>
   </div>
-
-   <h3>Notable Projects</h3>
-
-    <!-- Projects section -->
-  <div class="projects-grid">
-    <div class="project-box">
-        <h3>Mobile Game - The Pixinator</h3>
-        <a href="https://mint-projects.itch.io/pixinator" target="_blank" class="see-more-link">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M10 13a5 5 0 0 1 7-7l2 2a5 5 0 0 1-7 7l-2-2z"/>
-                <path d="M14 11a5 5 0 0 1-7 7l-2-2a5 5 0 0 1 7-7l2 2z"/>
-            </svg>
-            <span>See More</span>
-        </a>
-        <br>
-         <a target="_blank" class="see-more-link">
-            
-          
-        </a>
-        <div class="project-desc">
-            <p>A 2d pixel destruction action game where the player fights evil robots and can collect coing and get new player skins.
-            </p>
-        </div>
-    </div>
-
-     <div class="project-box">
-        <h3>Web Application - VidiMaze</h3>
-        <a href="https://vidimaze.quest/" target="_blank" class="see-more-link">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M10 13a5 5 0 0 1 7-7l2 2a5 5 0 0 1-7 7l-2-2z"/>
-                <path d="M14 11a5 5 0 0 1-7 7l-2-2a5 5 0 0 1 7-7l2 2z"/>
-            </svg>
-            <span>See More</span>
-        </a>
-        <br>
-         <a target="_blank" class="see-more-link">
-            
-          
-        </a>
-        <div class="project-desc">
-            <p>A full stack web application made with React, Java Spring, and PostgreSQL, using the youtube API to serve random video along with hosting a video ranking page
-            </p>
-        </div>
-    </div>
 </div>
-    
 
-      <div class="button-container">
-    <a href="developer_support.html">
-      <button>Support</button>
+<!-- MAIN -->
+<main>
+
+  <!-- HEADER -->
+  <header class="reveal">
+    <div class="header-eyebrow">// mintricacy llc &nbsp;·&nbsp; software & games</div>
+    <h1>MINT<span class="accent">RICACY</span></h1>
+    <div class="header-sub">Useful software. Effective games. Open source.</div>
+    <div class="badge">Open to clients &amp; partnerships</div>
+    <div class="header-decor">
+      v2.0.0<br>
+      EST. 2024<br>
+      PHX / REMOTE
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section class="about-grid reveal">
+    <div class="about-panel">
+      <div class="panel-label">About</div>
+      <h2>Who We Are</h2>
+      <p>Mintricacy is a lean dev studio dedicated to building software that actually works. We ship games, utilities, and open-source tools — no bloat, no filler.</p>
+      <p style="margin-top:14px">Currently we have one published game and are actively building a new software utility for Linux users.</p>
+    </div>
+    <div class="about-panel">
+      <div class="panel-label">Status</div>
+      <ul class="stat-list">
+        <li><span class="stat-label">Games shipped</span><span class="stat-val">01</span></li>
+        <li><span class="stat-label">Web apps live</span><span class="stat-val">01</span></li>
+        <li><span class="stat-label">In development</span><span class="stat-val">Linux utility</span></li>
+        <li><span class="stat-label">Availability</span><span class="stat-val">Open ↗</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section>
+    <div class="section-head reveal">
+      <span class="num">02</span>
+      <h2>Notable Projects</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="projects-grid">
+
+      <div class="project-card reveal">
+        <div class="project-type">Mobile Game</div>
+        <h3>The Pixinator</h3>
+        <p>A 2D pixel destruction action game — fight evil robots, collect coins, and unlock new player skins. Built for mobile with punchy arcade feel.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">Mobile</span>
+          <span class="tech-tag">2D Action</span>
+          <span class="tech-tag">Pixel Art</span>
+        </div>
+        <a class="project-link" href="https://mint-projects.itch.io/pixinator" target="_blank">
+          View on itch.io
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </a>
+        <div class="card-num">01</div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-type">Web Application</div>
+        <h3>VidiMaze</h3>
+        <p>A full-stack web app serving random YouTube videos alongside a community-driven video ranking page. Built to explore and rediscover content.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">Java Spring</span>
+          <span class="tech-tag">PostgreSQL</span>
+          <span class="tech-tag">YouTube API</span>
+        </div>
+        <a class="project-link" href="https://vidimaze.quest/" target="_blank">
+          Visit vidimaze.quest
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </a>
+        <div class="card-num">02</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-bar reveal">
+    <div class="cta-text">
+      <h3>Need Support?</h3>
+      <p>// developer_support.html</p>
+    </div>
+    <a class="btn" href="developer_support.html">
+      Open Support
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </div>
 
-<script>
-const consoleText = document.getElementById("console-text");
+</main>
 
-// Example "assembly-style" lines
-const messages = [
+<script>
+  // ── LOADER ──
+  const consoleText = document.getElementById("console-text");
+
+  const messages = [
     "MOV AX, 0x1F",
     "ADD BX, AX",
     "INT 0x80",
@@ -97,56 +613,67 @@ const messages = [
     "PUSH CX",
     "POP DX",
     "NOP",
-    "CALL 0x00401000"
-];
+    "CALL 0x00401000",
+    "XOR EAX, EAX",
+    "CMP BX, 0xFF",
+    "LOAD R1, 0x0040",
+    "SHL AX, 2",
+  ];
 
-// Last two lines to appear after "loading"
-const finalMessages = [
+  const finalMessages = [
+    "INIT mintricacy.core ... OK",
+    "MOUNT /projects ... OK",
     "HLT",
-    "System initialized..."
-];
+    "System initialized."
+  ];
 
-let linesTyped = 0;
-const totalRandomLines = 15;
+  let linesTyped = 0;
+  const totalRandomLines = 12;
 
-// Type each line character by character
-function typeLine(line, charIndex = 0, callback = null) {
-  if (charIndex < line.length) {
-    consoleText.innerHTML += line.charAt(charIndex);
-    setTimeout(() => typeLine(line, charIndex + 1, callback), 5);
-  } else {
-    consoleText.innerHTML += "\n";
-    if (callback) callback();
+  function typeLine(line, charIndex = 0, callback = null) {
+    if (charIndex < line.length) {
+      consoleText.innerHTML += line.charAt(charIndex);
+      setTimeout(() => typeLine(line, charIndex + 1, callback), 4);
+    } else {
+      consoleText.innerHTML += "\n";
+      if (callback) callback();
+    }
   }
-}
 
-function typeRandomLines() {
-  if (linesTyped < totalRandomLines) {
-    const randomIndex = Math.floor(Math.random() * messages.length);
-    typeLine(messages[randomIndex], 0, () => {
-      linesTyped++;
-      setTimeout(typeRandomLines, 10);
-    });
-  } else {
-    typeFinalMessages(0);
+  function typeRandomLines() {
+    if (linesTyped < totalRandomLines) {
+      const rand = messages[Math.floor(Math.random() * messages.length)];
+      typeLine(rand, 0, () => { linesTyped++; setTimeout(typeRandomLines, 8); });
+    } else {
+      typeFinalMessages(0);
+    }
   }
-}
 
-function typeFinalMessages(index) {
-  if (index < finalMessages.length) {
-    typeLine(finalMessages[index], 0, () => typeFinalMessages(index + 1));
-  } else {
-    const loader = document.getElementById("loader");
-    loader.style.transition = "opacity 0.7s ease, transform 0.7s ease";
-    loader.style.opacity = "0";
-    loader.style.transform = "scale(1.1)";
-    setTimeout(() => loader.style.display = "none", 700);
+  function typeFinalMessages(index) {
+    if (index < finalMessages.length) {
+      typeLine(finalMessages[index], 0, () => typeFinalMessages(index + 1));
+    } else {
+      const loader = document.getElementById("loader");
+      loader.style.opacity = "0";
+      loader.style.transform = "scale(1.04)";
+      setTimeout(() => {
+        loader.style.display = "none";
+        document.querySelectorAll(".reveal").forEach((el, i) => {
+          setTimeout(() => el.classList.add("visible"), i * 100);
+        });
+      }, 700);
+    }
   }
-}
 
-window.addEventListener("load", () => {
-  typeRandomLines();
-});
+  window.addEventListener("load", () => { setTimeout(typeRandomLines, 300); });
+
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
 </script>
 
+</body>
 </html>
